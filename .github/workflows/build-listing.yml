@@ -1,0 +1,39 @@
+name: Build VPM Listing
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [build]
+
+permissions:
+  contents: write
+  pages: write
+
+env:
+  listPublishDirectory: Website
+
+jobs:
+  build-listing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create publish directory
+        run: mkdir -p ${{ env.listPublishDirectory }}
+
+      - name: Build package listing
+        uses: vrchat-community/package-list-action@v1
+        with:
+          listUrl: https://nekoare.github.io/vpm-listing/index.json
+          path: ${{ env.listPublishDirectory }}/index.json
+          packages: |
+            nekoare/chimera-hair-master
+            nekoare/mask-creation-tool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: ${{ env.listPublishDirectory }}
