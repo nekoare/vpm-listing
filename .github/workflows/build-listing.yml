@@ -7,17 +7,13 @@ on:
     paths: source.json
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: true
-
-env:
-  listPublishDirectory: Website
-  pathToCi: ci
 
 jobs:
   build-listing:
@@ -29,24 +25,87 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
-        with:
-          repository: vrchat-community/package-list-action
-          path: ${{env.pathToCi}}
-          clean: false
-
-      - name: Restore Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{env.pathToCi}}/.nuke/temp
-            ~/.nuget/packages
-          key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-
-      - name: Build Package Version Listing
-        run: ${{env.pathToCi}}/build.cmd BuildMultiPackageListing --root ${{env.pathToCi}} --list-publish-directory $GITHUB_WORKSPACE/${{env.listPublishDirectory}}
+      - name: Build package listing
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          mkdir -p Website
+
+          python3 << 'PYEOF'
+          import json, subprocess, tempfile, zipfile, os
+
+          with open("source.json") as f:
+              source = json.load(f)
+
+          listing = {
+              "name": source["name"],
+              "id": source["id"],
+              "url": source["url"],
+              "author": source["author"],
+              "packages": {}
+          }
+
+          repos = source.get("githubRepos", [])
+
+          for repo in repos:
+              print(f"Processing {repo}...")
+              try:
+                  result = subprocess.run(
+                      ["gh", "api", f"repos/{repo}/releases", "--paginate"],
+                      capture_output=True, text=True, check=True
+                  )
+                  releases = json.loads(result.stdout)
+              except Exception as e:
+                  print(f"  Warning: Could not fetch releases for {repo}: {e}")
+                  continue
+
+              for release in releases:
+                  tag = release.get("tag_name", "")
+                  version = tag.lstrip("v")
+                  if not version:
+                      continue
+
+                  zip_asset = None
+                  for asset in release.get("assets", []):
+                      if asset["name"].endswith(".zip"):
+                          zip_asset = asset
+                          break
+
+                  if not zip_asset:
+                      print(f"  {tag}: no zip asset, skipping")
+                      continue
+
+                  download_url = zip_asset["browser_download_url"]
+
+                  with tempfile.TemporaryDirectory() as tmpdir:
+                      zip_path = os.path.join(tmpdir, "pkg.zip")
+                      subprocess.run(
+                          ["curl", "-sL", download_url, "-o", zip_path],
+                          check=True
+                      )
+                      try:
+                          with zipfile.ZipFile(zip_path, "r") as zf:
+                              with zf.open("package.json") as pf:
+                                  pkg = json.loads(pf.read())
+                      except Exception as e:
+                          print(f"  {tag}: could not extract package.json: {e}")
+                          continue
+
+                  pkg["url"] = download_url
+                  pkg_name = pkg.get("name", "")
+
+                  if pkg_name not in listing["packages"]:
+                      listing["packages"][pkg_name] = {"versions": {}}
+
+                  listing["packages"][pkg_name]["versions"][version] = pkg
+                  print(f"  {tag}: added {pkg_name} {version}")
+
+          with open("Website/index.json", "w") as f:
+              json.dump(listing, f, indent=2, ensure_ascii=False)
+
+          print(f"\nListing built with {len(listing['packages'])} package(s)")
+          PYEOF
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -54,7 +113,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{env.listPublishDirectory}}
+          path: Website
 
       - name: Deploy to GitHub Pages
         id: deployment
