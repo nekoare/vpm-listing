@@ -2,10 +2,7 @@
   "name": "Nekoare VPM Packages",
   "id": "com.nekoare.vpm",
   "url": "https://nekoare.github.io/vpm-listing/index.json",
-  "author": {
-    "name": "nekoare",
-    "url": "https://neko-to-same.booth.pm/"
-  },
+  "author": "nekoare",
   "githubRepos": [
     "nekoare/chimera-hair-master",
     "nekoare/mask-creation-tool"
