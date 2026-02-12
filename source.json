@@ -1,11 +1,28 @@
 {
-  "name": "Nekoare VPM Packages",
-  "id": "com.nekoare.vpm",
-  "url": "https://nekoare.github.io/vpm-listing/index.json",
   "author": "nekoare",
   "githubRepos": [
     "nekoare/chimera-hair-master",
     "nekoare/mask-creation-tool"
   ],
-  "packages": []
+  "listings": {
+    "bundled": {
+      "name": "Nekoare VPM Packages（同梱版）",
+      "id": "com.nekoare.vpm.bundled",
+      "url": "https://nekoare.github.io/vpm-listing/index.json",
+      "path": "index.json",
+      "packages": [
+        "com.nekoare.chimera-hair-master",
+        "com.nekoare.mask-creation-tool"
+      ]
+    },
+    "standalone": {
+      "name": "Nekoare VPM Packages（単体版）",
+      "id": "com.nekoare.vpm.standalone",
+      "url": "https://nekoare.github.io/vpm-listing/standalone/index.json",
+      "path": "standalone/index.json",
+      "packages": [
+        "com.nekoare.chimera-hair-master"
+      ]
+    }
+  }
 }
