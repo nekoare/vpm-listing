@@ -2,7 +2,8 @@
   "author": "nekoare",
   "githubRepos": [
     "nekoare/chimera-hair-master",
-    "nekoare/mask-creation-tool"
+    "nekoare/mask-creation-tool",
+    "nekoare/piercing-tool"
   ],
   "listings": {
     "bundled": {
@@ -22,6 +23,15 @@
       "path": "standalone/index.json",
       "packages": [
         "com.nekoare.chimera-hair-master"
+      ]
+    },
+    "piercing": {
+      "name": "なんでもどこでもピアスにするやつ",
+      "id": "com.nekoare.vpm.piercing",
+      "url": "https://nekoare.github.io/vpm-listing/piercing/index.json",
+      "path": "piercing/index.json",
+      "packages": [
+        "com.nekoare.piercing-tool"
       ]
     }
   }
