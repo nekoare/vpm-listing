@@ -3,7 +3,9 @@
   "githubRepos": [
     "nekoare/chimera-hair-master",
     "nekoare/mask-creation-tool",
-    "nekoare/piercing-tool"
+    "nekoare/piercing-tool",
+    "nekoare/tocolo",
+    "nekoare/tocolo-pro-releases"
   ],
   "listings": {
     "bundled": {
@@ -32,6 +34,25 @@
       "path": "piercing/index.json",
       "packages": [
         "com.nekoare.piercing-tool"
+      ]
+    },
+    "tocolo": {
+      "name": "Tocolo",
+      "id": "com.nekoare.vpm.tocolo",
+      "url": "https://nekoare.github.io/vpm-listing/tocolo/index.json",
+      "path": "tocolo/index.json",
+      "packages": [
+        "dev.nekoare.click-recolor"
+      ]
+    },
+    "tocolo-pro": {
+      "name": "Tocolo Pro",
+      "id": "com.nekoare.vpm.tocolo-pro",
+      "url": "https://nekoare.github.io/vpm-listing/tocolo-pro/index.json",
+      "path": "tocolo-pro/index.json",
+      "packages": [
+        "dev.nekoare.click-recolor",
+        "dev.nekoare.click-recolor-pro"
       ]
     }
   }
