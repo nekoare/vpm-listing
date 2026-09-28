@@ -95,12 +95,25 @@ jobs:
                   all_packages[pkg_name]["versions"][version] = pkg
                   print(f"  {tag}: added {pkg_name} {version}")
 
+          def version_key(v):
+              parts = []
+              for p in v.split("."):
+                  num = "".join(ch for ch in p if ch.isdigit())
+                  parts.append(int(num) if num else 0)
+              return tuple(parts)
+
           # Generate listing files for each listing definition
           for listing_key, listing_def in source.get("listings", {}).items():
               filtered = {}
+              # Optional per-listing version cap: "maxVersion": {"<package>": "X.Y.Z"} keeps only versions <= X.Y.Z
+              caps = listing_def.get("maxVersion", {})
               for pkg_name in listing_def.get("packages", []):
                   if pkg_name in all_packages:
-                      filtered[pkg_name] = all_packages[pkg_name]
+                      versions = all_packages[pkg_name]["versions"]
+                      cap = caps.get(pkg_name)
+                      if cap:
+                          versions = {v: pkg for v, pkg in versions.items() if version_key(v) <= version_key(cap)}
+                      filtered[pkg_name] = {"versions": versions}
 
               output = {
                   "name": listing_def["name"],
