@@ -37,7 +37,7 @@
       ]
     },
     "tocolo": {
-      "name": "Tocolo（0.2.0 まで）",
+      "name": "Tocolo（0.2.1 まで）",
       "id": "com.nekoare.vpm.tocolo",
       "url": "https://nekoare.github.io/vpm-listing/tocolo/index.json",
       "path": "tocolo/index.json",
@@ -45,11 +45,11 @@
         "dev.nekoare.click-recolor"
       ],
       "maxVersion": {
-        "dev.nekoare.click-recolor": "0.2.0"
+        "dev.nekoare.click-recolor": "0.2.1"
       }
     },
     "tocolo-pro": {
-      "name": "Tocolo Pro（0.2.0 まで）",
+      "name": "Tocolo Pro（0.2.1 まで）",
       "id": "com.nekoare.vpm.tocolo-pro",
       "url": "https://nekoare.github.io/vpm-listing/tocolo-pro/index.json",
       "path": "tocolo-pro/index.json",
@@ -58,8 +58,8 @@
         "dev.nekoare.click-recolor-pro"
       ],
       "maxVersion": {
-        "dev.nekoare.click-recolor": "0.2.0",
-        "dev.nekoare.click-recolor-pro": "0.2.0"
+        "dev.nekoare.click-recolor": "0.2.1",
+        "dev.nekoare.click-recolor-pro": "0.2.1"
       }
     },
     "tocolo-trial": {
